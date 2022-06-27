@@ -33,10 +33,11 @@ workflows:
     type: atmos
     steps:
      - command: terraform destroy infra/ec2
-     - command: terraform destroy infra/secruity-groups
+     - command: terraform destroy infra/security-groups
      - command: terraform destroy infra/vpc
   buildenv:
     decription: setup build env
     stack: mb-uw2-dev
     type: atmos
+    steps:
     - command: terraform apply orch/brave
