@@ -5,9 +5,9 @@ components:
       backend:
         s3:
           encrypt: true
-          bucket: mb-uw2-dev
+          bucket: mb-uw2-dev1
           key: terraform.tfstate
-          dynamodb_table: mb-uw2-dev
+          dynamodb_table: mb-uw2-dev1
           acl: "bucket-owner-full-control"
           region: "us-west-2"
       vars:

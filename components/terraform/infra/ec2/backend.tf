@@ -3,9 +3,9 @@ terraform {
 
   backend "s3" {
     region         = "us-west-2"
-    bucket         = "mb-uw2-dev"
+    bucket         = "mb-uw2-dev1"
     key            = "ec2/terraform.tfstate"
-    dynamodb_table = "mb-uw2-dev-lock"
+    dynamodb_table = "mb-uw2-dev1-lock"
     profile        = ""
     role_arn       = ""
     encrypt        = "true"
