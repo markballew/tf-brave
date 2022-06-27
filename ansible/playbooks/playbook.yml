@@ -36,28 +36,29 @@
         user: ubuntu
         host: github.com
         strict_host_key_checking: no
+
     - name: clone brave repo
       git:
         repo: git@github.com:brave/brave-core.git
         dest: '{{ node_app_dir }}'
+
     - name: Check for package.json
       stat:
         path: '{{ node_app_dir }}/package.json'
       register: packagejson
+
     - name: run npm install
       command: npm install
       args:
         chdir: '{{ node_app_dir }}'
-      async: 2100
-      poll: 600
       when: packagejson.stat.exists
-      register: npm_install
 
     - name: run npm init
       command: npm run init
       args:
         chdir: '{{ node_app_dir }}'
       when: packagejson.stat.exists
+
     - name: cut a binary
       command: npm run create_dist Release
       args:
