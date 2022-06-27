@@ -5,4 +5,4 @@ components:
         spacelift:
           workspace_enabled: true
       vars:
-        private_key_path: "/tmp/brave-build.pub/mb-dev-brave-build"
+        private_key_path: "/tmp/brave-build.pub/mb-dev1-brave-build"
