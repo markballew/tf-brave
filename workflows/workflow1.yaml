@@ -40,4 +40,5 @@ workflows:
     stack: mb-uw2-dev1
     type: atmos
     steps:
-    - command: terraform apply orch/brave
+    - command: terraform plan orch/build-brave
+    - command: terraform apply orch/brave-build

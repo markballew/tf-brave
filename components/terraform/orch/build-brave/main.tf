@@ -5,8 +5,8 @@ provider "aws" {
 data "terraform_remote_state" "ec2" {
   backend = "s3"
   config  = {
-    bucket = "mb-uw2-dev"
-    key    = "env:/mb-uw2-dev/ec2/terraform.tfstate"
+    bucket = "mb-uw2-dev1"
+    key    = "env:/mb-uw2-dev1/ec2/terraform.tfstate"
     region = var.region
   }
 }
