@@ -1,0 +1,8 @@
+components:
+  terraform:
+    "orch/build-brave":
+      settings:
+        spacelift:
+          workspace_enabled: true
+      vars:
+        private_key_path: "/tmp/brave-build.pub/mb-dev-brave-build"

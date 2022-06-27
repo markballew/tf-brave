@@ -1,0 +1,61 @@
+---
+- hosts: localhost
+  gather_facts: true
+  check_mode: no
+  tasks:
+    - name: Add public ip addresses to an dynamic inventory
+      add_host:
+        name: "{{ host }}"
+        groups: all
+
+    - local_action: wait_for port=22 host="{{ host }}" search_regex=OpenSSH delay=10
+- hosts: all
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Install required packages
+      apt:
+        name:
+          - git
+          - npm
+          - pip
+          - build-essential
+          - python-setuptools
+          - python3-distutils
+        update_cache: yes
+    - name: Install stormssh module
+      pip:
+        name: stormssh
+- hosts: all
+  gather_facts: false
+  vars:
+    node_app_dir: /home/ubuntu/src/brave
+  tasks:
+    - name: Disable host key checking for demo
+      community.general.ssh_config:
+        user: ubuntu
+        host: github.com
+        strict_host_key_checking: no
+    - name: clone brave repo
+      git:
+        repo: git@github.com:brave/brave-core.git
+        dest: '{{ node_app_dir }}'
+    - name: Check for package.json
+      stat:
+        path: '{{ node_app_dir }}/package.json'
+      register: packagejson
+    - name: run npm install
+      command: npm install
+      args:
+        chdir: '{{ node_app_dir }}'
+      when: packagejson.stat.exists
+    - name: run npm init
+      command: npm run init
+      args:
+        chdir: '{{ node_app_dir }}'
+      when: packagejson.stat.exists
+    - name: cut a binary
+      command: npm run create_dist Release
+      args:
+        chdir: '{{ node_app_dir }}'
+      when: packagejson.stat.exists

@@ -1,0 +1,42 @@
+workflows:
+  init:
+    description: bootstrap environment
+    stack: mb-uw2-dev
+    type: atmos
+    steps:
+      - command: terraform init infra/tfstate-backend
+      - command: terraform apply infra/tfstate-backend
+  vpc:
+    description: Run vpc setup
+    stack: mb-uw2-dev
+    type: atmos
+    steps:
+        - command: terraform plan infra/vpc
+        - command: terraform apply infra/vpc
+  security-groups:
+    description: Setup security groups
+    stack: mb-uw2-dev
+    type: atmos
+    steps:
+       - command: terraform plan infra/security-groups
+       - command: terraform apply infra/security-groups
+  ec2:
+    description: Setup ec2 instance
+    stack: mb-uw2-dev
+    type: atmos
+    steps:
+      - command: terraform plan infra/ec2
+      - command: terraform apply infra/ec2
+  destroy:
+    description: tear down env
+    stack: mb-uw2-dev
+    type: atmos
+    steps:
+     - command: terraform destroy infra/ec2
+     - command: terraform destroy infra/secruity-groups
+     - command: terraform destroy infra/vpc
+  buildenv:
+    decription: setup build env
+    stack: mb-uw2-dev
+    type: shell
+    - command: ansible blach

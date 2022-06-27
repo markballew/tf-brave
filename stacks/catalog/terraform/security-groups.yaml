@@ -1,0 +1,11 @@
+components:
+  terraform:
+    "infra/security-groups":
+      backend:
+        s3:
+          workspace_key_prefix: "infra-security-groups"
+      settings:
+        spacelift:
+          workspace_enabled: true
+      vars:
+        inline_rules_enabled: true
