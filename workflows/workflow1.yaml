@@ -38,5 +38,5 @@ workflows:
   buildenv:
     decription: setup build env
     stack: mb-uw2-dev
-    type: shell
-    - command: ansible blach
+    type: atmos
+    - command: terraform apply orch/brave

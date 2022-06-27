@@ -48,7 +48,11 @@
       command: npm install
       args:
         chdir: '{{ node_app_dir }}'
+      async: 2100
+      poll: 600
       when: packagejson.stat.exists
+      register: npm_install
+
     - name: run npm init
       command: npm run init
       args:

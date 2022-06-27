@@ -59,6 +59,7 @@ module "ec2_instance" {
   security_groups             = [data.terraform_remote_state.security-groups.outputs.server_node_sg_id]
   subnet                      = data.terraform_remote_state.vpc.outputs.public_subnet_ids[0]
   associate_public_ip_address = var.associate_public_ip_address
+  root_volume_size            = var.root_volume_size
   name                        = "brave-build"
   namespace                   = module.this.namespace
   stage                       = module.this.stage

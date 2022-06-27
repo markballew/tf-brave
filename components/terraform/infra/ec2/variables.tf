@@ -32,3 +32,8 @@ variable "ami_owner" {
   type        = string
   description = "Owner of the given AMI"
 }
+
+variable "root_volume_size" {
+  type        = number
+  description = "Size of the root volume in gigabytes"
+}
