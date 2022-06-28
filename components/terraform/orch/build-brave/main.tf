@@ -14,7 +14,7 @@ data "terraform_remote_state" "ec2" {
 module "ansible_provisioner" {
   source = "github.com/cloudposse/terraform-null-ansible"
 
-  arguments = ["-v -u ubuntu --private-key ${var.private_key_path}"]
+  arguments = ["-vvvv -u ubuntu --private-key ${var.private_key_path}"]
   envs      = ["host=${data.terraform_remote_state.ec2.outputs.public_ip}"]
   playbook  = "../../../../ansible/playbooks/playbook.yml"
   dry_run   = false

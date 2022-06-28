@@ -12,3 +12,6 @@ RUN apt-get update
 RUN apt-get install atmos -y -u
 RUN apt-get install ansible -y -u
 RUN ansible-galaxy collection install community.general
+RUN mkdir .ssh
+COPY ansible/configs/ssh_config .ssh/config
+COPY ansible/ansible.cfg .ansible.cfg

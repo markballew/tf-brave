@@ -30,6 +30,7 @@
   gather_facts: false
   vars:
     node_app_dir: /home/ubuntu/src/brave
+    git_repo: git@github.com:brave/brave-core.git
   tasks:
     - name: Disable host key checking for demo
       community.general.ssh_config:
@@ -37,10 +38,18 @@
         host: github.com
         strict_host_key_checking: no
 
+    - name: Ensuring the repo checkout exists
+      git:
+        repo: '{{ git_repo }}'
+        dest: '{{ node_app_dir }}'
+        update: no
+      register: repo_exists
+
     - name: clone brave repo
       git:
         repo: git@github.com:brave/brave-core.git
         dest: '{{ node_app_dir }}'
+      when: repo_exists is not defined
 
     - name: Check for package.json
       stat:

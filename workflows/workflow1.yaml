@@ -41,4 +41,4 @@ workflows:
     type: atmos
     steps:
     - command: terraform plan orch/build-brave
-    - command: terraform apply orch/brave-build
+    - command: terraform apply orch/build-brave
