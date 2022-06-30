@@ -22,6 +22,7 @@
           - build-essential
           - python-setuptools
           - python3-distutils
+          - python-is-python3
         update_cache: yes
     - name: Install stormssh module
       pip:
@@ -29,6 +30,7 @@
 - hosts: all
   gather_facts: false
   vars:
+    run_home: /home/ubuntu
     node_app_dir: /home/ubuntu/src/brave
     git_repo: git@github.com:brave/brave-core.git
   tasks:
@@ -56,6 +58,24 @@
         path: '{{ node_app_dir }}/package.json'
       register: packagejson
 
+    - name: install nvm
+      shell: >
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+      args:
+        creates: "{{ run_home }}/.nvm/nvm.sh"
+      register: nvm_installed
+
+    - name : source bash profiles
+      shell: >
+        source ~/.bashrc
+      args:
+        executable: /bin/bash
+      register: sourced
+      when : nvm_installed is defined
+
+    - name: switch to v16.15.0
+      shell: '[ -s "{{ run_home }}/.nvm/nvm.sh" ] && . "{{ run_home }}/.nvm/nvm.sh" && nvm install v16.15.0'
+
     - name: run npm install
       command: npm install
       args:
@@ -68,8 +88,14 @@
         chdir: '{{ node_app_dir }}'
       when: packagejson.stat.exists
 
+    - name: install build deps
+      command: './src/build/install-build-deps.sh'
+      args:
+        chdir: '/home/ubuntu'
+      when: packagejson.stat.exists
+
     - name: cut a binary
-      command: npm run create_dist Release
+      command: 'npm run create_dist Release --google_default_client_id=none --google_default_client_secret=none --brave_services_key=none --brave_infura_project_id=none --binance_client_id=none --ftx_client_id=none --ftx_client_secret=none --bitflyer_client_id=none --bitflyer_client_secret=none --bitflyer_staging_client_id=none --bitflyer_staging_client_secret=none --bitflyer_staging_url=none --gemini_api_url=none --gemini_api_staging_url=none --gemini_oauth_url=none --gemini_oauth_staging_url=none --gemini_wallet_client_id=none --gemini_wallet_client_secret=none --gemini_wallet_staging_client_id=none --gemini_wallet_staging_client_secret=none --gemini_client_id=none --gemini_client_secret=none --uphold_client_id=none --uphold_client_secret=none --uphold_staging_client_id=none --uphold_staging_client_secret=none --brave_sync_endpoint=none --safebrowsing_api_endpoint=none --updater_prod_endpoint=none --updater_dev_endpoint=none --rewards_grant_dev_endpoint=none --rewards_grant_staging_endpoint=none --rewards_grant_prod_endpoint=none --mac_installer_signing_identifier=none --sparkle_dsa_private_key_file=none --sparkle_eddsa_private_key=none --sparkle_eddsa_public_key=none --notary_user=none --notary_password=none --brave_stats_api_key=none --brave_stats_updater_url=none --brave_safetynet_api_key=none --brave_android_developer_options_code=none --brave_variations_server_url=none --dcheck_always_on=false --is_debug=false --symbol_level=0 --enable_nacl=false'
       args:
         chdir: '{{ node_app_dir }}'
       when: packagejson.stat.exists
